@@ -7,3 +7,5 @@ build/
 .vite/
 .DS_Store
 npm-debug.log*
+backend/*.db-wal
+backend/*.db-shm
