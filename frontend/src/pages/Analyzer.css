@@ -1,0 +1,2406 @@
+/* =========================================================
+   RESUMEAI — ANALYZER PAGE
+   Premium AI SaaS Design
+========================================================= */
+
+.analyzer-page {
+  min-height: calc(100vh - 74px);
+  padding: 70px 24px 90px;
+  background:
+    radial-gradient(
+      circle at 10% 10%,
+      rgba(99, 102, 241, 0.10),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 90% 25%,
+      rgba(124, 58, 237, 0.09),
+      transparent 30%
+    ),
+    linear-gradient(
+      180deg,
+      #f8fafc 0%,
+      #f1f5f9 100%
+    );
+}
+
+.analyzer-container {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.analyzer-header {
+  text-align: center;
+  margin-bottom: 38px;
+}
+
+.analyzer-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  padding: 9px 15px;
+
+  border: 1px solid rgba(99, 102, 241, 0.18);
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  color: #4f46e5;
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+
+  box-shadow:
+    0 6px 20px rgba(99, 102, 241, 0.08);
+}
+
+.analyzer-header h1 {
+  margin: 18px 0 14px;
+
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: clamp(38px, 5vw, 58px);
+  line-height: 1.08;
+  letter-spacing: -2px;
+
+  color: #0f172a;
+}
+
+.analyzer-header h1 span {
+  background: linear-gradient(
+    135deg,
+    #4f46e5,
+    #7c3aed
+  );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.analyzer-header p {
+  max-width: 650px;
+  margin: 0 auto;
+
+  color: #64748b;
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+/* =========================================================
+   MAIN CARD
+========================================================= */
+
+.analyzer-card {
+  position: relative;
+
+  width: 100%;
+
+  padding: 32px;
+
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 24px;
+
+  background: rgba(255, 255, 255, 0.88);
+
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  box-shadow:
+    0 25px 70px rgba(15, 23, 42, 0.09),
+    0 4px 15px rgba(15, 23, 42, 0.03);
+}
+
+/* =========================================================
+   UPLOAD AREA
+========================================================= */
+
+.upload-area {
+  position: relative;
+
+  min-height: 285px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 35px 25px;
+
+  border: 2px dashed #cbd5e1;
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(248, 250, 252, 0.9),
+      rgba(241, 245, 249, 0.7)
+    );
+
+  cursor: pointer;
+
+  text-align: center;
+
+  transition:
+    border-color 0.3s ease,
+    background 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.upload-area:hover {
+  border-color: #818cf8;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(238, 242, 255, 0.8),
+      rgba(248, 250, 252, 0.9)
+    );
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 15px 35px rgba(99, 102, 241, 0.08);
+}
+
+.upload-area.dragging {
+  border-color: #6366f1;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(238, 242, 255, 0.95),
+      rgba(245, 243, 255, 0.95)
+    );
+
+  transform: scale(1.01);
+
+  box-shadow:
+    0 0 0 5px rgba(99, 102, 241, 0.08),
+    0 20px 45px rgba(99, 102, 241, 0.12);
+}
+
+/* =========================================================
+   UPLOAD ICON
+========================================================= */
+
+.upload-icon {
+  width: 68px;
+  height: 68px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 18px;
+
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #eef2ff,
+      #f5f3ff
+    );
+
+  border: 1px solid #e0e7ff;
+
+  font-size: 30px;
+
+  box-shadow:
+    0 10px 25px rgba(99, 102, 241, 0.10);
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.upload-area:hover .upload-icon {
+  transform: translateY(-5px) scale(1.04);
+
+  box-shadow:
+    0 15px 30px rgba(99, 102, 241, 0.16);
+}
+
+.upload-area h3 {
+  margin: 0 0 7px;
+
+  color: #0f172a;
+
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.upload-area > p {
+  margin: 0;
+
+  color: #64748b;
+
+  font-size: 13px;
+}
+
+.upload-area > p strong {
+  color: #4f46e5;
+  font-weight: 700;
+}
+
+.upload-note {
+  margin-top: 10px !important;
+
+  color: #94a3b8 !important;
+
+  font-size: 11px !important;
+}
+/* =========================================================
+   SELECTED FILE CARD
+========================================================= */
+
+.file-info {
+  width: 100%;
+  margin-top: 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 15px;
+  padding: 15px 17px;
+
+  background: rgba(248, 250, 252, 0.95);
+
+  border: 1px solid #dbe3ee;
+  border-radius: 15px;
+
+  box-shadow:
+    0 8px 25px rgba(15, 23, 42, 0.05);
+
+  animation: fileSlideIn 0.35s ease both;
+}
+
+@keyframes fileSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* =========================================================
+   FILE LEFT SIDE
+========================================================= */
+
+.file-info-left {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+}
+
+.file-icon {
+  width: 44px;
+  height: 44px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 11px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #eef2ff,
+      #f5f3ff
+    );
+
+  border: 1px solid #e0e7ff;
+
+  font-size: 20px;
+
+  box-shadow:
+    0 6px 15px rgba(99, 102, 241, 0.08);
+}
+
+
+/* =========================================================
+   FILE DETAILS
+========================================================= */
+
+.file-details {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.file-details strong {
+  max-width: 520px;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  color: #1e293b;
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.file-details span {
+  color: #64748b;
+
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+
+/* =========================================================
+   REMOVE FILE
+========================================================= */
+
+.remove-file {
+  width: 35px;
+  height: 35px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #fecaca;
+  border-radius: 9px;
+
+  background: #ffffff;
+
+  color: #dc2626;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    all 0.2s ease;
+}
+
+.remove-file:hover {
+  background: #fef2f2;
+
+  border-color: #fca5a5;
+
+  transform: scale(1.06);
+
+  box-shadow:
+    0 6px 15px rgba(220, 38, 38, 0.10);
+}
+
+.remove-file:active {
+  transform: scale(0.96);
+}
+
+
+/* =========================================================
+   ERROR MESSAGE
+========================================================= */
+
+.error-message {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  margin-top: 15px;
+  padding: 12px 14px;
+
+  border: 1px solid #fecaca;
+  border-radius: 11px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #fff7f7,
+      #fef2f2
+    );
+
+  color: #b91c1c;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  animation: errorSlide 0.3s ease both;
+}
+
+.error-message span {
+  width: 22px;
+  height: 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #fee2e2;
+
+  font-size: 12px;
+}
+
+@keyframes errorSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* =========================================================
+   JOB DESCRIPTION SECTION
+========================================================= */
+
+.job-section {
+  margin-top: 30px;
+}
+
+
+/* =========================================================
+   JOB LABEL
+========================================================= */
+
+.job-label {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 12px;
+}
+
+.job-label-icon {
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 11px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #eef2ff,
+      #f5f3ff
+    );
+
+  border: 1px solid #e0e7ff;
+
+  font-size: 17px;
+
+  box-shadow:
+    0 6px 15px rgba(99, 102, 241, 0.08);
+}
+
+.job-label > div:last-child {
+  display: flex;
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+.job-label label {
+  color: #1e293b;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.job-label span {
+  color: #94a3b8;
+
+  font-size: 11px;
+}
+
+
+/* =========================================================
+   TEXTAREA
+========================================================= */
+
+.job-section textarea {
+  width: 100%;
+
+  min-height: 175px;
+
+  display: block;
+
+  padding: 16px 17px;
+
+  border: 1px solid #dbe3ee;
+  border-radius: 14px;
+
+  outline: none;
+
+  resize: vertical;
+
+  background: #ffffff;
+
+  color: #0f172a;
+
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+
+  line-height: 1.7;
+
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
+}
+
+.job-section textarea::placeholder {
+  color: #a0aec0;
+}
+
+.job-section textarea:hover {
+  border-color: #c7d2fe;
+}
+
+.job-section textarea:focus {
+  border-color: #818cf8;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 0 0 4px rgba(99, 102, 241, 0.08);
+}
+
+
+/* =========================================================
+   TEXTAREA FOOTER
+========================================================= */
+
+.textarea-footer {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 10px;
+
+  margin-top: 8px;
+
+  color: #94a3b8;
+
+  font-size: 10px;
+}
+
+.textarea-footer span:first-child {
+  color: #64748b;
+}
+
+
+/* =========================================================
+   ANALYZE BUTTON
+========================================================= */
+
+.analyze-btn {
+  width: 100%;
+  min-height: 55px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+
+  margin-top: 25px;
+  padding: 0 20px;
+
+  border: none;
+  border-radius: 13px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #6366f1,
+      #7c3aed
+    );
+
+  color: #ffffff;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 12px 28px rgba(99, 102, 241, 0.23);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    opacity 0.25s ease;
+}
+
+.analyze-btn:hover:not(:disabled) {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 18px 38px rgba(99, 102, 241, 0.31);
+}
+
+.analyze-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.analyze-btn:disabled {
+  opacity: 0.55;
+
+  cursor: not-allowed;
+
+  box-shadow: none;
+}
+
+
+/* =========================================================
+   LOADING SPINNER
+========================================================= */
+
+.spinner {
+  width: 18px;
+  height: 18px;
+
+  flex-shrink: 0;
+
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #ffffff;
+
+  border-radius: 50%;
+
+  animation: analyzerSpin 0.75s linear infinite;
+}
+
+@keyframes analyzerSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================================================
+   SECURITY NOTE
+========================================================= */
+
+.security-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  margin-top: 15px;
+
+  color: #94a3b8;
+
+  font-size: 10px;
+  line-height: 1.5;
+}
+/* =========================================================
+   RESPONSIVE — LARGE LAPTOP
+========================================================= */
+
+@media (max-width: 1200px) {
+
+  .analyzer-container {
+    max-width: 1000px;
+    padding: 0 24px;
+  }
+
+  .analyzer-card {
+    max-width: 720px;
+  }
+
+  .analyzer-header h1 {
+    font-size: 44px;
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVE — TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .analyzer-page {
+    padding: 55px 20px 80px;
+  }
+
+  .analyzer-container {
+    max-width: 760px;
+    padding: 0;
+  }
+
+  .analyzer-header {
+    margin-bottom: 30px;
+  }
+
+  .analyzer-header h1 {
+    font-size: 40px;
+  }
+
+  .analyzer-header p {
+    max-width: 600px;
+    font-size: 13px;
+  }
+
+  .analyzer-card {
+    max-width: 100%;
+    padding: 28px;
+  }
+
+  .upload-area {
+    min-height: 235px;
+    padding: 35px 25px;
+  }
+
+  .upload-icon {
+    width: 65px;
+    height: 65px;
+    font-size: 27px;
+  }
+
+  .upload-area h3 {
+    font-size: 17px;
+  }
+
+  .job-section textarea {
+    min-height: 160px;
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVE — MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+  .analyzer-page {
+    min-height: calc(100vh - 66px);
+
+    padding: 42px 16px 60px;
+  }
+
+  .analyzer-container {
+    width: 100%;
+    max-width: 100%;
+  }
+
+
+  /* ---------- HEADER ---------- */
+
+  .analyzer-header {
+    margin-bottom: 24px;
+
+    text-align: center;
+  }
+
+  .analyzer-badge {
+    padding: 7px 11px;
+
+    font-size: 9px;
+    letter-spacing: 0.6px;
+  }
+
+  .analyzer-header h1 {
+    margin-top: 14px;
+
+    font-size: 32px;
+
+    line-height: 1.15;
+
+    letter-spacing: -1px;
+  }
+
+  .analyzer-header p {
+    margin-top: 12px;
+
+    max-width: 100%;
+
+    font-size: 12px;
+
+    line-height: 1.7;
+  }
+
+
+  /* ---------- MAIN CARD ---------- */
+
+  .analyzer-card {
+    width: 100%;
+
+    padding: 18px;
+
+    border-radius: 18px;
+  }
+
+
+  /* ---------- UPLOAD AREA ---------- */
+
+  .upload-area {
+    min-height: 220px;
+
+    padding: 28px 15px;
+
+    border-radius: 15px;
+  }
+
+  .upload-icon {
+    width: 58px;
+    height: 58px;
+
+    border-radius: 14px;
+
+    font-size: 24px;
+  }
+
+  .upload-area h3 {
+    margin-top: 15px;
+
+    font-size: 15px;
+
+    line-height: 1.4;
+  }
+
+  .upload-area p {
+    font-size: 11px;
+
+    line-height: 1.6;
+  }
+
+  .upload-area p:last-child {
+    max-width: 250px;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    font-size: 9px !important;
+  }
+
+
+  /* ---------- FILE CARD ---------- */
+
+  .file-info {
+    padding: 12px;
+
+    gap: 10px;
+
+    border-radius: 13px;
+  }
+
+  .file-info-left {
+    gap: 9px;
+
+    min-width: 0;
+  }
+
+  .file-icon {
+    width: 39px;
+    height: 39px;
+
+    border-radius: 9px;
+
+    font-size: 17px;
+  }
+
+  .file-details strong {
+    max-width: 190px;
+
+    font-size: 11px;
+  }
+
+  .file-details span {
+    font-size: 9px;
+  }
+
+  .remove-file {
+    width: 32px;
+    height: 32px;
+
+    border-radius: 8px;
+
+    font-size: 11px;
+  }
+
+
+  /* ---------- ERROR ---------- */
+
+  .error-message {
+    padding: 10px 12px;
+
+    font-size: 10px;
+
+    border-radius: 9px;
+  }
+
+
+  /* ---------- JOB SECTION ---------- */
+
+  .job-section {
+    margin-top: 23px;
+  }
+
+  .job-section > label {
+    font-size: 12px;
+  }
+
+  .job-section textarea {
+    min-height: 145px;
+
+    padding: 13px;
+
+    border-radius: 12px;
+
+    font-size: 11px;
+
+    line-height: 1.6;
+  }
+
+
+  /* ---------- ANALYZE BUTTON ---------- */
+
+  .analyze-btn {
+    min-height: 50px;
+
+    margin-top: 20px;
+
+    padding: 0 15px;
+
+    border-radius: 11px;
+
+    font-size: 12px;
+  }
+
+  .spinner {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVE — SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+  .analyzer-page {
+    padding: 32px 12px 50px;
+  }
+
+  .analyzer-header h1 {
+    font-size: 28px;
+  }
+
+  .analyzer-header p {
+    font-size: 11px;
+  }
+
+  .analyzer-card {
+    padding: 14px;
+
+    border-radius: 16px;
+  }
+
+  .upload-area {
+    min-height: 205px;
+
+    padding: 25px 12px;
+  }
+
+  .upload-icon {
+    width: 53px;
+    height: 53px;
+
+    font-size: 22px;
+  }
+
+  .upload-area h3 {
+    font-size: 14px;
+  }
+
+  .upload-area p {
+    font-size: 10px;
+  }
+
+  .file-details strong {
+    max-width: 145px;
+  }
+
+  .job-section textarea {
+    min-height: 130px;
+  }
+
+  .analyze-btn {
+    min-height: 48px;
+
+    font-size: 11px;
+  }
+}
+
+
+/* =========================================================
+   EXTRA SMALL DEVICES
+========================================================= */
+
+@media (max-width: 360px) {
+
+  .analyzer-page {
+    padding-left: 9px;
+    padding-right: 9px;
+  }
+
+  .analyzer-card {
+    padding: 11px;
+  }
+
+  .analyzer-header h1 {
+    font-size: 25px;
+  }
+
+  .upload-area {
+    min-height: 195px;
+  }
+
+  .file-details strong {
+    max-width: 115px;
+  }
+
+  .analyze-btn {
+    font-size: 10px;
+  }
+}
+
+
+/* =========================================================
+   LANDSCAPE MOBILE
+========================================================= */
+
+@media (max-height: 600px) and (max-width: 900px) {
+
+  .analyzer-page {
+    padding-top: 25px;
+    padding-bottom: 40px;
+  }
+
+  .analyzer-header {
+    margin-bottom: 18px;
+  }
+
+  .upload-area {
+    min-height: 180px;
+  }
+
+  .job-section textarea {
+    min-height: 110px;
+  }
+}
+
+
+/* =========================================================
+   TOUCH DEVICES
+========================================================= */
+
+@media (hover: none) and (pointer: coarse) {
+
+  .upload-area:hover {
+    transform: none;
+  }
+
+  .analyze-btn:hover:not(:disabled) {
+    transform: none;
+  }
+
+  .remove-file:hover {
+    transform: none;
+  }
+}
+
+
+/* =========================================================
+   REDUCE MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .analyzer-page,
+  .analyzer-card,
+  .upload-area,
+  .file-info,
+  .error-message,
+  .analyze-btn,
+  .spinner {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+/* =========================================================
+   PREMIUM UPLOAD ANIMATION
+========================================================= */
+
+.upload-area {
+  position: relative;
+  overflow: hidden;
+
+  isolation: isolate;
+}
+
+.upload-area::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  border-radius: inherit;
+
+  background:
+    linear-gradient(
+      120deg,
+      transparent 20%,
+      rgba(99, 102, 241, 0.07),
+      transparent 80%
+    );
+
+  transform: translateX(-100%);
+
+  transition: transform 0.7s ease;
+
+  pointer-events: none;
+
+  z-index: -1;
+}
+
+.upload-area:hover::before {
+  transform: translateX(100%);
+}
+
+
+/* =========================================================
+   UPLOAD ICON
+========================================================= */
+
+.upload-icon {
+  position: relative;
+
+  animation: uploadFloat 3s ease-in-out infinite;
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.upload-area:hover .upload-icon {
+  transform: translateY(-4px) scale(1.05);
+
+  box-shadow:
+    0 14px 30px rgba(99, 102, 241, 0.18);
+}
+
+@keyframes uploadFloat {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+
+/* =========================================================
+   DRAG ACTIVE
+========================================================= */
+
+.upload-area.dragging {
+  border-color: #6366f1;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(99, 102, 241, 0.08),
+      rgba(124, 58, 237, 0.06)
+    );
+
+  transform: scale(1.01);
+
+  box-shadow:
+    0 0 0 5px rgba(99, 102, 241, 0.08),
+    0 20px 45px rgba(99, 102, 241, 0.12);
+}
+
+.upload-area.dragging .upload-icon {
+  transform: translateY(-6px) scale(1.08);
+}
+
+
+/* =========================================================
+   UPLOAD TEXT
+========================================================= */
+
+.upload-area h3 {
+  transition:
+    color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.upload-area:hover h3 {
+  color: #4f46e5;
+
+  transform: translateY(-1px);
+}
+
+.upload-area strong {
+  color: #6366f1;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   FILE READY INDICATOR
+========================================================= */
+
+.file-info {
+  position: relative;
+}
+
+.file-info::after {
+  content: "READY";
+
+  position: absolute;
+
+  top: -8px;
+  right: 14px;
+
+  padding: 3px 7px;
+
+  border: 1px solid #bbf7d0;
+
+  border-radius: 999px;
+
+  background: #f0fdf4;
+
+  color: #15803d;
+
+  font-size: 8px;
+  font-weight: 800;
+
+  letter-spacing: 0.6px;
+}
+
+
+/* =========================================================
+   SUCCESS DOT
+========================================================= */
+
+.file-info-left::before {
+  content: "";
+
+  position: absolute;
+
+  width: 7px;
+  height: 7px;
+
+  margin-left: 31px;
+  margin-top: 29px;
+
+  border: 2px solid white;
+
+  border-radius: 50%;
+
+  background: #22c55e;
+
+  box-shadow:
+    0 0 0 2px rgba(34, 197, 94, 0.12);
+}
+
+
+/* =========================================================
+   TEXTAREA PREMIUM EFFECT
+========================================================= */
+
+.job-section {
+  position: relative;
+}
+
+.job-section textarea {
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+}
+
+.job-section textarea:focus {
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 0 0 4px rgba(99, 102, 241, 0.07),
+    0 12px 30px rgba(15, 23, 42, 0.05);
+}
+
+
+/* =========================================================
+   BUTTON SHINE EFFECT
+========================================================= */
+
+.analyze-btn {
+  position: relative;
+
+  overflow: hidden;
+
+  isolation: isolate;
+}
+
+.analyze-btn::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: -120%;
+
+  width: 70%;
+  height: 100%;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.20),
+      transparent
+    );
+
+  transform: skewX(-20deg);
+
+  transition: left 0.6s ease;
+
+  pointer-events: none;
+}
+
+.analyze-btn:hover:not(:disabled)::before {
+  left: 140%;
+}
+
+
+/* =========================================================
+   BUTTON CONTENT ABOVE SHINE
+========================================================= */
+
+.analyze-btn > * {
+  position: relative;
+
+  z-index: 2;
+}
+
+
+/* =========================================================
+   LOADING STATE
+========================================================= */
+
+.analyze-btn:disabled {
+  background:
+    linear-gradient(
+      135deg,
+      #818cf8,
+      #8b5cf6
+    );
+}
+
+.analyze-btn:disabled .spinner {
+  animation:
+    analyzerSpin 0.75s linear infinite;
+}
+
+
+/* =========================================================
+   CARD ENTRY ANIMATION
+========================================================= */
+
+.analyzer-card {
+  animation:
+    analyzerCardEnter 0.65s ease both;
+}
+
+@keyframes analyzerCardEnter {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(25px)
+      scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+
+/* =========================================================
+   HEADER ENTRY
+========================================================= */
+
+.analyzer-header {
+  animation:
+    analyzerHeaderEnter 0.6s ease both;
+}
+
+@keyframes analyzerHeaderEnter {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0);
+  }
+}
+
+
+/* =========================================================
+   MOBILE FINAL FIX
+========================================================= */
+
+@media (max-width: 700px) {
+
+  .upload-area::before {
+    display: none;
+  }
+
+  .upload-area:hover .upload-icon {
+    transform: none;
+  }
+
+  .upload-area:hover h3 {
+    transform: none;
+  }
+
+  .file-info::after {
+    top: -7px;
+    right: 10px;
+
+    font-size: 7px;
+  }
+
+  .file-info-left::before {
+    margin-left: 27px;
+    margin-top: 26px;
+  }
+
+  .analyzer-card {
+    animation:
+      analyzerCardEnter 0.5s ease both;
+  }
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 360px) {
+
+  .file-info::after {
+    display: none;
+  }
+
+  .file-info-left::before {
+    display: none;
+  }
+
+  .upload-area {
+    border-width: 1.5px;
+  }
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .upload-icon,
+  .analyzer-card,
+  .analyzer-header,
+  .upload-area::before {
+    animation: none !important;
+
+    transition: none !important;
+  }
+}
+/* =========================================================
+   PART 5 — FINAL RESPONSIVE POLISH
+========================================================= */
+
+/* ---------- TABLET ---------- */
+
+@media (min-width: 701px) and (max-width: 1024px) {
+
+  .analyzer-page {
+    padding: 60px 24px 90px;
+  }
+
+  .analyzer-container {
+    width: 100%;
+    max-width: 820px;
+    margin: 0 auto;
+  }
+
+  .analyzer-card {
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .upload-area {
+    min-height: 225px;
+  }
+
+  .file-details strong {
+    max-width: 420px;
+  }
+}
+
+
+/* ---------- MOBILE ---------- */
+
+@media (max-width: 700px) {
+
+  .analyzer-page {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  .analyzer-container {
+    width: 100%;
+  }
+
+  .analyzer-header {
+    width: 100%;
+  }
+
+  .analyzer-header h1 {
+    word-break: normal;
+  }
+
+  .analyzer-header h1 span {
+    display: inline;
+  }
+
+  .analyzer-card {
+    width: 100%;
+    box-shadow:
+      0 12px 35px rgba(15, 23, 42, 0.07);
+  }
+
+  .upload-area {
+    width: 100%;
+  }
+
+  .upload-area input {
+    display: none;
+  }
+
+  .file-info {
+    width: 100%;
+  }
+
+  .file-details {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .file-details strong {
+    display: block;
+
+    width: 100%;
+    max-width: 100%;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .file-details span {
+    display: block;
+  }
+
+  .job-section {
+    width: 100%;
+  }
+
+  .job-section textarea {
+    width: 100%;
+    max-width: 100%;
+
+    box-sizing: border-box;
+  }
+
+  .analyze-btn {
+    width: 100%;
+
+    white-space: normal;
+
+    text-align: center;
+  }
+}
+
+
+/* =========================================================
+   EXTRA SMALL MOBILE
+========================================================= */
+
+@media (max-width: 390px) {
+
+  .analyzer-page {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .analyzer-card {
+    padding: 12px;
+  }
+
+  .analyzer-header h1 {
+    font-size: 26px;
+  }
+
+  .analyzer-header p {
+    font-size: 10.5px;
+  }
+
+  .analyzer-badge {
+    font-size: 8px;
+    padding: 6px 9px;
+  }
+
+  .upload-area {
+    min-height: 190px;
+    padding: 22px 10px;
+  }
+
+  .upload-area h3 {
+    font-size: 13px;
+  }
+
+  .upload-area p {
+    font-size: 9.5px;
+  }
+
+  .upload-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
+
+  .file-info {
+    padding: 10px;
+  }
+
+  .file-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 15px;
+  }
+
+  .file-details strong {
+    font-size: 10px;
+  }
+
+  .file-details span {
+    font-size: 8px;
+  }
+
+  .remove-file {
+    width: 30px;
+    height: 30px;
+  }
+
+  .job-section textarea {
+    min-height: 125px;
+    font-size: 10px;
+  }
+
+  .analyze-btn {
+    min-height: 47px;
+    font-size: 10px;
+  }
+}
+
+
+/* =========================================================
+   DEVICE SAFE AREA
+========================================================= */
+
+@supports (padding: max(0px)) {
+
+  @media (max-width: 700px) {
+
+    .analyzer-page {
+      padding-left: max(
+        12px,
+        env(safe-area-inset-left)
+      );
+
+      padding-right: max(
+        12px,
+        env(safe-area-inset-right)
+      );
+
+      padding-bottom: max(
+        50px,
+        env(safe-area-inset-bottom)
+      );
+    }
+  }
+}
+
+
+/* =========================================================
+   PRINT
+========================================================= */
+
+@media print {
+
+  .analyzer-page {
+    background: white;
+    padding: 0;
+  }
+
+  .analyzer-card {
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+
+  .analyze-btn {
+    display: none;
+  }
+
+  .upload-area {
+    border: 1px solid #ddd;
+  }
+}
+
+
+/* =========================================================
+   FINAL ACCESSIBILITY
+========================================================= */
+
+.upload-area:focus-within {
+  border-color: #818cf8;
+
+  box-shadow:
+    0 0 0 4px rgba(99, 102, 241, 0.08);
+}
+
+.remove-file:focus-visible,
+.analyze-btn:focus-visible {
+  outline: 3px solid rgba(99, 102, 241, 0.25);
+  outline-offset: 3px;
+}
+
+
+/* =========================================================
+   PREVENT TEXT OVERFLOW
+========================================================= */
+
+.analyzer-page h1,
+.analyzer-page h2,
+.analyzer-page h3,
+.analyzer-page p {
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   FINAL MOTION CONTROL
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .upload-area::before,
+  .upload-icon,
+  .analyzer-card,
+  .analyzer-header {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+/* =========================================================
+   PART 6 — PREMIUM SAAS FINISH
+========================================================= */
+
+/* ---------- PAGE BACKGROUND ---------- */
+
+.analyzer-page {
+  position: relative;
+  isolation: isolate;
+
+  background:
+    radial-gradient(
+      circle at 10% 5%,
+      rgba(99, 102, 241, 0.08),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 90% 35%,
+      rgba(124, 58, 237, 0.07),
+      transparent 30%
+    ),
+    linear-gradient(
+      180deg,
+      #f8fafc 0%,
+      #ffffff 100%
+    );
+}
+
+.analyzer-page::before {
+  content: "";
+
+  position: absolute;
+
+  width: 420px;
+  height: 420px;
+
+  top: 80px;
+  left: -240px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(99, 102, 241, 0.09),
+      transparent 70%
+    );
+
+  pointer-events: none;
+
+  z-index: -1;
+}
+
+.analyzer-page::after {
+  content: "";
+
+  position: absolute;
+
+  width: 380px;
+  height: 380px;
+
+  right: -210px;
+  bottom: 100px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(124, 58, 237, 0.08),
+      transparent 70%
+    );
+
+  pointer-events: none;
+
+  z-index: -1;
+}
+
+
+/* =========================================================
+   HEADER POLISH
+========================================================= */
+
+.analyzer-header h1 {
+  position: relative;
+}
+
+.analyzer-header h1 span {
+  background:
+    linear-gradient(
+      135deg,
+      #4f46e5,
+      #7c3aed
+    );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  color: transparent;
+}
+
+.analyzer-header p {
+  max-width: 650px;
+}
+
+
+/* =========================================================
+   MAIN CARD GLASS EFFECT
+========================================================= */
+
+.analyzer-card {
+  position: relative;
+
+  background:
+    rgba(255, 255, 255, 0.88);
+
+  border: 1px solid
+    rgba(226, 232, 240, 0.85);
+
+  box-shadow:
+    0 30px 80px rgba(15, 23, 42, 0.09),
+    0 8px 25px rgba(99, 102, 241, 0.04);
+
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.analyzer-card::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 8%;
+
+  width: 84%;
+  height: 1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(99, 102, 241, 0.35),
+      transparent
+    );
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   UPLOAD ZONE PREMIUM BORDER
+========================================================= */
+
+.upload-area {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(248, 250, 252, 0.95),
+      rgba(255, 255, 255, 0.95)
+    );
+
+  border: 1.5px dashed #cbd5e1;
+
+  box-shadow:
+    inset 0 0 0 1px
+      rgba(255, 255, 255, 0.8);
+
+  transition:
+    border-color 0.3s ease,
+    background 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
+}
+
+.upload-area:hover {
+  border-color: #818cf8;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(238, 242, 255, 0.65),
+      rgba(255, 255, 255, 0.95)
+    );
+
+  box-shadow:
+    0 15px 35px rgba(99, 102, 241, 0.08),
+    inset 0 0 0 1px
+      rgba(129, 140, 248, 0.08);
+}
+
+
+/* =========================================================
+   UPLOAD ICON PREMIUM
+========================================================= */
+
+.upload-icon {
+  background:
+    linear-gradient(
+      135deg,
+      #eef2ff,
+      #f5f3ff
+    );
+
+  border: 1px solid
+    rgba(99, 102, 241, 0.12);
+
+  box-shadow:
+    0 10px 25px rgba(99, 102, 241, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+
+/* =========================================================
+   FILE INFORMATION CARD
+========================================================= */
+
+.file-info {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(240, 253, 244, 0.85),
+      rgba(255, 255, 255, 0.96)
+    );
+
+  border: 1px solid
+    rgba(187, 247, 208, 0.9);
+
+  box-shadow:
+    0 8px 24px rgba(22, 163, 74, 0.06);
+
+  animation:
+    fileAppear 0.4s ease both;
+}
+
+@keyframes fileAppear {
+
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
+/* =========================================================
+   FILE ICON
+========================================================= */
+
+.file-icon {
+  background:
+    linear-gradient(
+      135deg,
+      #eef2ff,
+      #e0e7ff
+    );
+
+  border: 1px solid #c7d2fe;
+
+  box-shadow:
+    0 6px 15px rgba(99, 102, 241, 0.10);
+}
+
+
+/* =========================================================
+   REMOVE BUTTON
+========================================================= */
+
+.remove-file {
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.remove-file:hover {
+  transform: rotate(4deg) scale(1.05);
+
+  background: #fef2f2;
+
+  color: #dc2626;
+}
+
+
+/* =========================================================
+   JOB DESCRIPTION
+========================================================= */
+
+.job-section > label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  margin-bottom: 10px;
+
+  color: #334155;
+
+  font-weight: 700;
+}
+
+.job-section textarea {
+  background:
+    rgba(255, 255, 255, 0.95);
+
+  border: 1px solid #e2e8f0;
+
+  box-shadow:
+    inset 0 1px 2px rgba(15, 23, 42, 0.02);
+
+  resize: vertical;
+}
+
+.job-section textarea:hover {
+  border-color: #cbd5e1;
+}
+
+
+/* =========================================================
+   ANALYZE BUTTON
+========================================================= */
+
+.analyze-btn {
+  background:
+    linear-gradient(
+      135deg,
+      #6366f1 0%,
+      #7c3aed 100%
+    );
+
+  border: 1px solid
+    rgba(255, 255, 255, 0.15);
+
+  box-shadow:
+    0 12px 30px rgba(99, 102, 241, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+
+  letter-spacing: 0.1px;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    filter 0.25s ease;
+}
+
+.analyze-btn:hover:not(:disabled) {
+  transform: translateY(-3px);
+
+  filter: brightness(1.03);
+
+  box-shadow:
+    0 18px 40px rgba(99, 102, 241, 0.30),
+    inset 0 1px 0 rgba(255, 255, 255, 0.20);
+}
+
+.analyze-btn:active:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   ERROR MESSAGE
+========================================================= */
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #fff7f7,
+      #fef2f2
+    );
+
+  border: 1px solid #fecaca;
+
+  color: #b91c1c;
+
+  box-shadow:
+    0 7px 20px rgba(220, 38, 38, 0.06);
+
+  animation:
+    errorShake 0.35s ease;
+}
+
+.error-message::before {
+  content: "!";
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 18px;
+  height: 18px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #dc2626;
+
+  color: white;
+
+  font-size: 11px;
+  font-weight: 800;
+}
+
+@keyframes errorShake {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-3px);
+  }
+
+  75% {
+    transform: translateX(3px);
+  }
+}
+
+
+/* =========================================================
+   DESKTOP SPACING
+========================================================= */
+
+@media (min-width: 1025px) {
+
+  .analyzer-page {
+    padding-top: 80px;
+    padding-bottom: 110px;
+  }
+
+  .analyzer-card {
+    margin-top: 38px;
+  }
+}
+
+
+/* =========================================================
+   MOBILE GLASS OPTIMIZATION
+========================================================= */
+
+@media (max-width: 700px) {
+
+  .analyzer-page::before,
+  .analyzer-page::after {
+    opacity: 0.5;
+  }
+
+  .analyzer-card {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    box-shadow:
+      0 18px 45px rgba(15, 23, 42, 0.08);
+  }
+
+  .upload-area {
+    box-shadow:
+      inset 0 0 0 1px
+        rgba(255, 255, 255, 0.8);
+  }
+
+  .analyze-btn:hover:not(:disabled) {
+    transform: none;
+  }
+}
+
+
+/* =========================================================
+   DARK SCREEN / HIGH CONTRAST SAFETY
+========================================================= */
+
+@media (prefers-contrast: more) {
+
+  .upload-area {
+    border-color: #64748b;
+  }
+
+  .analyzer-card {
+    border-color: #94a3b8;
+  }
+
+  .job-section textarea {
+    border-color: #64748b;
+  }
+}
+
+
+/* =========================================================
+   FINAL REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .upload-icon,
+  .file-info,
+  .error-message,
+  .analyzer-card,
+  .analyzer-header {
+    animation: none !important;
+  }
+
+  .upload-area,
+  .analyze-btn,
+  .remove-file,
+  .job-section textarea {
+    transition: none !important;
+  }
+}
