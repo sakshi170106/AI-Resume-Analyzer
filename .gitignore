@@ -9,3 +9,6 @@ build/
 npm-debug.log*
 backend/*.db-wal
 backend/*.db-shm
+backend/*.db
+backend/*.db-wal
+backend/*.db-shm
