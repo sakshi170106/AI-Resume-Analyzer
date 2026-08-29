@@ -60,13 +60,13 @@ function Analyzer() {
 
       formData.append("resume", file);
       formData.append("jobDescription", jobDescription);
-const response = await fetch(
-  `${import.meta.env.VITE_API_URL}/api/analyze`,
-  {
-    method: "POST",
-    body: formData,
-  }
-);
+
+      // IMPORTANT:
+      // Relative API URL - works with the deployed Vercel frontend
+      const response = await fetch("/api/analyze", {
+        method: "POST",
+        body: formData,
+      });
 
       const data = await response.json();
 
@@ -81,6 +81,8 @@ const response = await fetch(
 
       navigate("/results");
     } catch (err) {
+      console.error("Analyze error:", err);
+
       setError(
         err.message || "Something went wrong. Please try again."
       );
@@ -91,12 +93,10 @@ const response = await fetch(
 
   return (
     <div className="analyzer-page">
-
       <div className="analyzer-container">
 
         {/* HEADER */}
         <header className="analyzer-header">
-
           <div className="analyzer-badge">
             ✨ AI-POWERED ANALYSIS
           </div>
@@ -109,7 +109,6 @@ const response = await fetch(
             Upload your resume and let AI analyze your ATS
             compatibility, skills, keywords and improvements.
           </p>
-
         </header>
 
         {/* MAIN CARD */}
@@ -127,7 +126,6 @@ const response = await fetch(
             onDragLeave={() => setDragActive(false)}
             onDrop={handleDrop}
           >
-
             <div className="upload-icon">
               ☁️
             </div>
@@ -155,15 +153,12 @@ const response = await fetch(
               onChange={handleFileChange}
               hidden
             />
-
           </label>
 
           {/* FILE */}
           {file && (
             <div className="file-info">
-
               <div className="file-info-left">
-
                 <div className="file-icon">
                   📄
                 </div>
@@ -177,7 +172,6 @@ const response = await fetch(
                     Ready to analyze
                   </span>
                 </div>
-
               </div>
 
               <button
@@ -190,7 +184,6 @@ const response = await fetch(
               >
                 ✕
               </button>
-
             </div>
           )}
 
@@ -203,9 +196,7 @@ const response = await fetch(
 
           {/* JOB DESCRIPTION */}
           <div className="job-section">
-
             <div className="job-label-row">
-
               <label htmlFor="jobDescription">
                 🎯 Job Description
               </label>
@@ -213,7 +204,6 @@ const response = await fetch(
               <span>
                 Optional
               </span>
-
             </div>
 
             <textarea
@@ -229,7 +219,6 @@ const response = await fetch(
               💡 Adding a job description helps AI compare your
               resume with the role requirements.
             </small>
-
           </div>
 
           {/* ANALYZE BUTTON */}
@@ -239,7 +228,6 @@ const response = await fetch(
             onClick={analyzeResume}
             disabled={!file || loading}
           >
-
             {loading ? (
               <>
                 <span className="spinner"></span>
@@ -251,22 +239,17 @@ const response = await fetch(
                 <span>→</span>
               </>
             )}
-
           </button>
 
           {/* TRUST */}
           <div className="analyzer-trust">
-
             <span>🔒 Secure</span>
             <span>⚡ AI Powered</span>
             <span>📊 ATS Analysis</span>
-
           </div>
 
         </div>
-
       </div>
-
     </div>
   );
 }
