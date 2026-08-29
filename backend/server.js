@@ -5,45 +5,21 @@ const pdfParse = require("pdf-parse");
 const mammoth = require("mammoth");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const Database = require("better-sqlite3");
+const { neon } = require("@neondatabase/serverless");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+
 require("dotenv").config();
 
-// ==========================================
-// APP CONFIG
-// ==========================================
-
 const app = express();
-
-const PORT = process.env.PORT || 5000;
 
 const JWT_SECRET =
   process.env.JWT_SECRET || "resumeai_super_secret_key_2026";
 
-// ==========================================
-// SQLITE DATABASE
-// ==========================================
+if (!process.env.DATABASE_URL) {
+  console.error("DATABASE_URL is missing.");
+}
 
-const db = new Database("resumeai.db");
-
-db.pragma("journal_mode = WAL");
-
-// Create users table
-db.prepare(`
-  CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    email TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-  )
-`).run();
-
-console.log("");
-console.log("=================================");
-console.log("✅ SQLite Database Connected");
-console.log("📁 Database: resumeai.db");
-console.log("=================================");
+const sql = neon(process.env.DATABASE_URL);
 
 // ==========================================
 // MIDDLEWARE
@@ -51,15 +27,35 @@ console.log("=================================");
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "http://localhost:5174",
-    ],
+    origin: true,
     credentials: true,
   })
 );
 
 app.use(express.json());
+
+// ==========================================
+// DATABASE INIT
+// ==========================================
+
+async function initDatabase() {
+  try {
+    await sql`
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        name TEXT NOT NULL,
+        email TEXT NOT NULL UNIQUE,
+        password TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `;
+
+    console.log("Neon PostgreSQL Connected");
+    console.log("Users table ready");
+  } catch (error) {
+    console.error("Database initialization error:", error);
+  }
+}
 
 // ==========================================
 // FILE UPLOAD
@@ -101,11 +97,23 @@ app.get("/", (req, res) => {
 // API TEST
 // ==========================================
 
-app.get("/api/test", (req, res) => {
-  res.json({
-    success: true,
-    message: "API is working ✅",
-  });
+app.get("/api/test", async (req, res) => {
+  try {
+    await sql`SELECT 1`;
+
+    res.json({
+      success: true,
+      message: "ResumeAI API is working ✅",
+      database: "Neon PostgreSQL connected",
+    });
+  } catch (error) {
+    console.error("Database test error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Database connection failed.",
+    });
+  }
 });
 
 // ==========================================
@@ -116,7 +124,6 @@ app.post("/api/auth/signup", async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    // Validation
     if (!name || !email || !password) {
       return res.status(400).json({
         success: false,
@@ -134,46 +141,38 @@ app.post("/api/auth/signup", async (req, res) => {
     const cleanName = name.trim();
     const cleanEmail = email.trim().toLowerCase();
 
-    // Check existing user
-    const existingUser = db
-      .prepare(
-        "SELECT id FROM users WHERE email = ?"
-      )
-      .get(cleanEmail);
+    const existingUser = await sql`
+      SELECT id
+      FROM users
+      WHERE email = ${cleanEmail}
+      LIMIT 1
+    `;
 
-    if (existingUser) {
+    if (existingUser.length > 0) {
       return res.status(409).json({
         success: false,
         message: "An account with this email already exists.",
       });
     }
 
-    // Hash password
-    const hashedPassword = await bcrypt.hash(
-      password,
-      10
-    );
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Insert user
-    const result = db
-      .prepare(`
-        INSERT INTO users
-        (name, email, password)
-        VALUES (?, ?, ?)
-      `)
-      .run(
-        cleanName,
-        cleanEmail,
-        hashedPassword
-      );
+    const result = await sql`
+      INSERT INTO users (name, email, password)
+      VALUES (
+        ${cleanName},
+        ${cleanEmail},
+        ${hashedPassword}
+      )
+      RETURNING id, name, email
+    `;
 
-    const userId = result.lastInsertRowid;
+    const user = result[0];
 
-    // Generate JWT
     const token = jwt.sign(
       {
-        userId: userId,
-        email: cleanEmail,
+        userId: user.id,
+        email: user.email,
       },
       JWT_SECRET,
       {
@@ -181,26 +180,18 @@ app.post("/api/auth/signup", async (req, res) => {
       }
     );
 
-    console.log(
-      "✅ New user registered:",
-      cleanEmail
-    );
-
     return res.status(201).json({
       success: true,
       message: "Account created successfully.",
-
       token,
-
       user: {
-        id: userId,
-        name: cleanName,
-        email: cleanEmail,
+        id: user.id,
+        name: user.name,
+        email: user.email,
       },
     });
   } catch (error) {
-    console.error("❌ Signup Error:");
-    console.error(error);
+    console.error("Signup Error:", error);
 
     return res.status(500).json({
       success: false,
@@ -217,7 +208,6 @@ app.post("/api/auth/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Validation
     if (!email || !password) {
       return res.status(400).json({
         success: false,
@@ -225,36 +215,28 @@ app.post("/api/auth/login", async (req, res) => {
       });
     }
 
-    const cleanEmail = email
-      .trim()
-      .toLowerCase();
+    const cleanEmail = email.trim().toLowerCase();
 
-    // Find user
-    const user = db
-      .prepare(`
-        SELECT
-          id,
-          name,
-          email,
-          password
-        FROM users
-        WHERE email = ?
-      `)
-      .get(cleanEmail);
+    const result = await sql`
+      SELECT id, name, email, password
+      FROM users
+      WHERE email = ${cleanEmail}
+      LIMIT 1
+    `;
 
-    if (!user) {
+    if (result.length === 0) {
       return res.status(401).json({
         success: false,
         message: "Invalid email or password.",
       });
     }
 
-    // Check password
-    const passwordMatch =
-      await bcrypt.compare(
-        password,
-        user.password
-      );
+    const user = result[0];
+
+    const passwordMatch = await bcrypt.compare(
+      password,
+      user.password
+    );
 
     if (!passwordMatch) {
       return res.status(401).json({
@@ -263,7 +245,6 @@ app.post("/api/auth/login", async (req, res) => {
       });
     }
 
-    // Generate JWT
     const token = jwt.sign(
       {
         userId: user.id,
@@ -275,17 +256,10 @@ app.post("/api/auth/login", async (req, res) => {
       }
     );
 
-    console.log(
-      "✅ User logged in:",
-      user.email
-    );
-
     return res.json({
       success: true,
       message: "Login successful.",
-
       token,
-
       user: {
         id: user.id,
         name: user.name,
@@ -293,8 +267,7 @@ app.post("/api/auth/login", async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("❌ Login Error:");
-    console.error(error);
+    console.error("Login Error:", error);
 
     return res.status(500).json({
       success: false,
@@ -307,10 +280,9 @@ app.post("/api/auth/login", async (req, res) => {
 // CURRENT USER
 // ==========================================
 
-app.get("/api/auth/me", (req, res) => {
+app.get("/api/auth/me", async (req, res) => {
   try {
-    const authHeader =
-      req.headers.authorization;
+    const authHeader = req.headers.authorization;
 
     if (
       !authHeader ||
@@ -322,27 +294,18 @@ app.get("/api/auth/me", (req, res) => {
       });
     }
 
-    const token =
-      authHeader.split(" ")[1];
+    const token = authHeader.split(" ")[1];
 
-    const decoded = jwt.verify(
-      token,
-      JWT_SECRET
-    );
+    const decoded = jwt.verify(token, JWT_SECRET);
 
-    const user = db
-      .prepare(`
-        SELECT
-          id,
-          name,
-          email,
-          created_at
-        FROM users
-        WHERE id = ?
-      `)
-      .get(decoded.userId);
+    const result = await sql`
+      SELECT id, name, email, created_at
+      FROM users
+      WHERE id = ${decoded.userId}
+      LIMIT 1
+    `;
 
-    if (!user) {
+    if (result.length === 0) {
       return res.status(404).json({
         success: false,
         message: "User not found.",
@@ -351,11 +314,11 @@ app.get("/api/auth/me", (req, res) => {
 
     return res.json({
       success: true,
-      user,
+      user: result[0],
     });
   } catch (error) {
     console.error(
-      "❌ Token verification error:",
+      "Token verification error:",
       error.message
     );
 
@@ -375,15 +338,6 @@ app.post(
   upload.single("resume"),
   async (req, res) => {
     try {
-      console.log("");
-      console.log("=================================");
-      console.log("📄 Resume analysis started");
-      console.log("=================================");
-
-      // --------------------------------------
-      // CHECK FILE
-      // --------------------------------------
-
       if (!req.file) {
         return res.status(400).json({
           success: false,
@@ -392,62 +346,41 @@ app.post(
       }
 
       console.log(
-        "📁 File:",
+        "Resume:",
         req.file.originalname
       );
-
-      console.log(
-        "📦 Size:",
-        req.file.size,
-        "bytes"
-      );
-
-      // --------------------------------------
-      // GEMINI API KEY
-      // --------------------------------------
 
       if (!process.env.GEMINI_API_KEY) {
         return res.status(500).json({
           success: false,
-          message:
-            "GEMINI_API_KEY is missing in .env",
+          message: "GEMINI_API_KEY is missing.",
         });
       }
 
-      // --------------------------------------
-      // FILE EXTENSION
-      // --------------------------------------
-
-      const extension =
-        req.file.originalname
-          .split(".")
-          .pop()
-          .toLowerCase();
+      const extension = req.file.originalname
+        .split(".")
+        .pop()
+        .toLowerCase();
 
       let resumeText = "";
 
-      // --------------------------------------
+      // ======================================
       // PDF
-      // --------------------------------------
+      // ======================================
 
       if (extension === "pdf") {
-        console.log("📕 Reading PDF...");
-
-        const data =
-          await pdfParse(
-            req.file.buffer
-          );
+        const data = await pdfParse(
+          req.file.buffer
+        );
 
         resumeText = data.text;
       }
 
-      // --------------------------------------
+      // ======================================
       // DOCX
-      // --------------------------------------
+      // ======================================
 
       else if (extension === "docx") {
-        console.log("📘 Reading DOCX...");
-
         const data =
           await mammoth.extractRawText({
             buffer: req.file.buffer,
@@ -456,9 +389,9 @@ app.post(
         resumeText = data.value;
       }
 
-      // --------------------------------------
+      // ======================================
       // INVALID FILE
-      // --------------------------------------
+      // ======================================
 
       else {
         return res.status(400).json({
@@ -468,46 +401,33 @@ app.post(
         });
       }
 
-      // --------------------------------------
+      // ======================================
       // CLEAN TEXT
-      // --------------------------------------
+      // ======================================
 
       resumeText = resumeText
         .replace(/\s+/g, " ")
         .trim();
 
-      console.log(
-        "📝 Extracted characters:",
-        resumeText.length
-      );
-
-      // --------------------------------------
-      // CHECK TEXT
-      // --------------------------------------
-
       if (resumeText.length < 30) {
         return res.status(400).json({
           success: false,
           message:
-            "Could not read enough text from this resume. Please upload a text-based PDF or DOCX.",
+            "Could not read enough text from this resume.",
         });
       }
 
-      // --------------------------------------
+      // ======================================
       // JOB DESCRIPTION
-      // --------------------------------------
+      // ======================================
 
       const jobDescription =
         req.body.jobDescription?.trim() ||
         "Not provided";
 
-      // --------------------------------------
+      // ======================================
       // GEMINI
-      // --------------------------------------
-
-      console.log(
-        "🤖 Connecting to Gemini..."
-      );
+      // ======================================
 
       const genAI =
         new GoogleGenerativeAI(
@@ -519,9 +439,9 @@ app.post(
           model: "gemini-3.6-flash",
         });
 
-      // --------------------------------------
+      // ======================================
       // PROMPT
-      // --------------------------------------
+      // ======================================
 
       const prompt = `
 You are a professional ATS Resume Analyzer.
@@ -591,13 +511,9 @@ RESUME:
 ${resumeText}
 `;
 
-      // --------------------------------------
-      // SEND TO GEMINI
-      // --------------------------------------
-
-      console.log(
-        "🚀 Sending resume to Gemini..."
-      );
+      // ======================================
+      // AI REQUEST
+      // ======================================
 
       const result =
         await model.generateContent(
@@ -609,33 +525,28 @@ ${resumeText}
 
       let aiText = response.text();
 
-      console.log(
-        "✅ Gemini response received"
-      );
-
-      // --------------------------------------
-      // CLEAN RESPONSE
-      // --------------------------------------
+      // ======================================
+      // CLEAN AI RESPONSE
+      // ======================================
 
       aiText = aiText
         .replace(/```json/gi, "")
         .replace(/```/g, "")
         .trim();
 
-      // --------------------------------------
+      // ======================================
       // PARSE JSON
-      // --------------------------------------
+      // ======================================
 
       let analysis;
 
       try {
         analysis = JSON.parse(aiText);
-      } catch (jsonError) {
+      } catch (error) {
         console.error(
-          "❌ Invalid Gemini JSON:"
+          "Invalid Gemini JSON:",
+          aiText
         );
-
-        console.error(aiText);
 
         return res.status(500).json({
           success: false,
@@ -644,9 +555,9 @@ ${resumeText}
         });
       }
 
-      // --------------------------------------
+      // ======================================
       // SCORE VALIDATION
-      // --------------------------------------
+      // ======================================
 
       const scoreFields = [
         "atsScore",
@@ -658,8 +569,9 @@ ${resumeText}
       ];
 
       scoreFields.forEach((field) => {
-        let value =
-          Number(analysis[field]);
+        let value = Number(
+          analysis[field]
+        );
 
         if (isNaN(value)) {
           value = 0;
@@ -674,9 +586,9 @@ ${resumeText}
           Math.round(value);
       });
 
-      // --------------------------------------
+      // ======================================
       // ARRAY VALIDATION
-      // --------------------------------------
+      // ======================================
 
       if (
         !Array.isArray(
@@ -702,61 +614,21 @@ ${resumeText}
         analysis.suggestions = [];
       }
 
-      // --------------------------------------
-      // LOG RESULTS
-      // --------------------------------------
-
-      console.log(
-        "🎯 ATS Score:",
-        analysis.atsScore
-      );
-
-      console.log(
-        "💻 Skills:",
-        analysis.skillsMatch
-      );
-
-      console.log(
-        "🔑 Keywords:",
-        analysis.keywords
-      );
-
-      console.log(
-        "📐 Format:",
-        analysis.format
-      );
-
-      console.log(
-        "================================="
-      );
-
-      console.log(
-        "✅ Analysis completed"
-      );
-
-      console.log(
-        "================================="
-      );
-
-      // --------------------------------------
+      // ======================================
       // RESPONSE
-      // --------------------------------------
+      // ======================================
 
       return res.json({
         success: true,
-
         fileName:
           req.file.originalname,
-
         analysis,
       });
     } catch (error) {
-      console.error("");
       console.error(
-        "❌ ANALYSIS ERROR"
+        "ANALYSIS ERROR:",
+        error
       );
-
-      console.error(error);
 
       return res.status(500).json({
         success: false,
@@ -769,7 +641,7 @@ ${resumeText}
 );
 
 // ==========================================
-// MULTER / FILE ERROR
+// MULTER ERROR HANDLER
 // ==========================================
 
 app.use(
@@ -804,7 +676,7 @@ app.use(
 );
 
 // ==========================================
-// 404 HANDLER
+// 404
 // ==========================================
 
 app.use((req, res) => {
@@ -822,7 +694,7 @@ app.use((req, res) => {
 app.use(
   (error, req, res, next) => {
     console.error(
-      "❌ Server error:",
+      "Server error:",
       error
     );
 
@@ -836,33 +708,49 @@ app.use(
 );
 
 // ==========================================
-// START SERVER
+// VERCEL EXPORT
 // ==========================================
 
-app.listen(PORT, () => {
-  console.log("");
-  console.log("=================================");
-  console.log(
-    "🚀 ResumeAI Backend Running"
-  );
-  console.log(
-    `🌐 http://localhost:${PORT}`
-  );
-  console.log(
-    `🧪 http://localhost:${PORT}/api/test`
-  );
-  console.log(
-    "🔐 POST /api/auth/signup"
-  );
-  console.log(
-    "🔑 POST /api/auth/login"
-  );
-  console.log(
-    "👤 GET /api/auth/me"
-  );
-  console.log(
-    "📄 POST /api/analyze"
-  );
-  console.log("=================================");
-  console.log("");
-});
+module.exports = app;
+
+// ==========================================
+// LOCAL SERVER
+// ==========================================
+
+if (require.main === module) {
+  const PORT =
+    process.env.PORT || 5000;
+
+  initDatabase().then(() => {
+    app.listen(PORT, () => {
+      console.log("");
+      console.log(
+        "================================="
+      );
+      console.log(
+        "🚀 ResumeAI Backend Running"
+      );
+      console.log(
+        `🌐 http://localhost:${PORT}`
+      );
+      console.log(
+        `🧪 http://localhost:${PORT}/api/test`
+      );
+      console.log(
+        "🔐 POST /api/auth/signup"
+      );
+      console.log(
+        "🔑 POST /api/auth/login"
+      );
+      console.log(
+        "👤 GET /api/auth/me"
+      );
+      console.log(
+        "📄 POST /api/analyze"
+      );
+      console.log(
+        "================================="
+      );
+    });
+  });
+}
