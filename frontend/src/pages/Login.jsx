@@ -34,31 +34,45 @@ function Login() {
       setLoading(true);
       setError("");
 
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/auth/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(form),
-        }
-      );
+      // IMPORTANT:
+      // Relative API URL
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify(form),
+      });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Login failed.");
+        throw new Error(
+          data.message || "Login failed."
+        );
       }
 
       // Save authentication information
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem(
+        "token",
+        data.token
+      );
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify(data.user)
+      );
 
       // Go to home page
       navigate("/");
     } catch (err) {
-      setError(err.message || "Something went wrong.");
+      console.error("Login error:", err);
+
+      setError(
+        err.message || "Something went wrong."
+      );
     } finally {
       setLoading(false);
     }
@@ -73,15 +87,20 @@ function Login() {
 
       <div className="auth-container">
 
-        {/* Left Side */}
+        {/* LEFT SIDE */}
         <div className="auth-showcase">
 
-          <Link to="/" className="auth-brand">
+          <Link
+            to="/"
+            className="auth-brand"
+          >
             <div className="auth-brand-icon">
               ✦
             </div>
 
-            <span>Resume Analyzer</span>
+            <span>
+              Resume Analyzer
+            </span>
           </Link>
 
           <div className="showcase-content">
@@ -92,37 +111,65 @@ function Login() {
 
             <h1>
               Build a resume
-              <span> that gets noticed.</span>
+              <span>
+                {" "}that gets noticed.
+              </span>
             </h1>
 
             <p>
-              Analyze your resume with AI, improve your ATS score,
-              discover missing skills and get personalized recommendations.
+              Analyze your resume with AI,
+              improve your ATS score,
+              discover missing skills and
+              get personalized recommendations.
             </p>
 
             <div className="showcase-features">
 
               <div className="showcase-feature">
-                <div className="showcase-icon">✓</div>
+                <div className="showcase-icon">
+                  ✓
+                </div>
+
                 <div>
-                  <strong>ATS Score Analysis</strong>
-                  <span>Understand how your resume performs.</span>
+                  <strong>
+                    ATS Score Analysis
+                  </strong>
+
+                  <span>
+                    Understand how your resume performs.
+                  </span>
                 </div>
               </div>
 
               <div className="showcase-feature">
-                <div className="showcase-icon">✦</div>
+                <div className="showcase-icon">
+                  ✦
+                </div>
+
                 <div>
-                  <strong>AI Recommendations</strong>
-                  <span>Get practical suggestions to improve.</span>
+                  <strong>
+                    AI Recommendations
+                  </strong>
+
+                  <span>
+                    Get practical suggestions to improve.
+                  </span>
                 </div>
               </div>
 
               <div className="showcase-feature">
-                <div className="showcase-icon">🎯</div>
+                <div className="showcase-icon">
+                  🎯
+                </div>
+
                 <div>
-                  <strong>Job Matching</strong>
-                  <span>Find important keywords for your target role.</span>
+                  <strong>
+                    Job Matching
+                  </strong>
+
+                  <span>
+                    Find important keywords for your target role.
+                  </span>
                 </div>
               </div>
 
@@ -132,24 +179,27 @@ function Login() {
           <div className="showcase-footer">
             © 2026 Resume Analyzer
           </div>
-
         </div>
 
-
-        {/* Right Side */}
+        {/* RIGHT SIDE */}
         <div className="auth-panel">
 
           <div className="auth-card">
 
             <div className="mobile-brand">
+
               <div className="auth-brand-icon">
                 ✦
               </div>
 
-              <span>Resume Analyzer</span>
+              <span>
+                Resume Analyzer
+              </span>
+
             </div>
 
             <div className="auth-heading">
+
               <span className="auth-label">
                 WELCOME BACK
               </span>
@@ -161,8 +211,8 @@ function Login() {
               <p>
                 Continue your resume improvement journey.
               </p>
-            </div>
 
+            </div>
 
             {error && (
               <div className="auth-error">
@@ -171,10 +221,9 @@ function Login() {
               </div>
             )}
 
-
             <form onSubmit={handleSubmit}>
 
-              {/* Email */}
+              {/* EMAIL */}
               <div className="form-group">
 
                 <label htmlFor="email">
@@ -200,8 +249,7 @@ function Login() {
                 </div>
               </div>
 
-
-              {/* Password */}
+              {/* PASSWORD */}
               <div className="form-group">
 
                 <div className="password-label">
@@ -235,13 +283,19 @@ function Login() {
                 </div>
               </div>
 
-
-              {/* Remember */}
+              {/* REMEMBER */}
               <div className="auth-options">
 
                 <label className="remember-me">
-                  <input type="checkbox" />
-                  <span>Remember me</span>
+
+                  <input
+                    type="checkbox"
+                  />
+
+                  <span>
+                    Remember me
+                  </span>
+
                 </label>
 
                 <span className="forgot-password">
@@ -250,14 +304,12 @@ function Login() {
 
               </div>
 
-
-              {/* Submit */}
+              {/* SUBMIT */}
               <button
                 type="submit"
                 className="auth-submit"
                 disabled={loading}
               >
-
                 {loading ? (
                   <>
                     <span className="auth-spinner"></span>
@@ -269,16 +321,15 @@ function Login() {
                     <span>→</span>
                   </>
                 )}
-
               </button>
 
             </form>
 
-
             <div className="auth-divider">
-              <span>New to Resume Analyzer?</span>
+              <span>
+                New to Resume Analyzer?
+              </span>
             </div>
-
 
             <Link
               to="/signup"
@@ -287,13 +338,11 @@ function Login() {
               Create an account
             </Link>
 
-
             <p className="auth-security">
               🔐 Your account information is securely protected.
             </p>
 
           </div>
-
         </div>
 
       </div>
@@ -302,4 +351,3 @@ function Login() {
 }
 
 export default Login;
-
